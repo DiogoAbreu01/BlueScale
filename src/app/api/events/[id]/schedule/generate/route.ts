@@ -17,7 +17,8 @@ export async function POST(req:NextRequest,context:{params:Promise<{id:string}>}
   if(existing){await tx.shiftAssignment.deleteMany({where:{scheduleVersionId:version.id,shiftId:{in:[...activeIds]}}});await tx.scheduleVersion.update({where:{id:version.id},data:{revision:{increment:1}}});}
   if(result.assignments.length)await tx.shiftAssignment.createMany({data:result.assignments.map(a=>({scheduleVersionId:version.id,memberId:a.memberId,shiftId:a.shiftId,locked:!!a.locked}))});
   await tx.scheduleGeneration.create({data:{eventId:id,scheduleVersionId:version.id,uncovered:result.uncovered as unknown as Prisma.InputJsonValue,algorithm:result.algorithm}});
-  await tx.event.update({where:{id},data:{status:'GENERATED'}});
+  const hasPublished=await tx.scheduleVersion.count({where:{eventId:id,status:'PUBLISHED'}});
+  await tx.event.update({where:{id},data:{status:hasPublished?'PUBLISHED':'GENERATED'}});
   await tx.auditLog.create({data:{actorId:u.id,action:'GENERATE',entity:'ScheduleVersion',entityId:version.id,details:{uncovered:result.uncovered.length}}});
   return {versionId:version.id,revision:version.revision+(existing?1:0),...result};
  },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable,timeout:20000});return ok(result);

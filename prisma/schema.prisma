@@ -170,6 +170,7 @@ model Workstation {
   slotMinutes Int @default(90)
   priority Int @default(1)
   archivedAt DateTime? // Excluído da operação, preserva turnos e presenças já publicados.
+  createdAt DateTime @default(now()) // Filtra postos adicionados após a publicação anterior.
   startsAt DateTime
   endsAt DateTime
   shifts Shift[]
