@@ -1,7 +1,7 @@
 import { z } from 'zod';
 export const memberSchema = z.object({
  identifier:z.string().trim().min(2).max(32),fullName:z.string().trim().min(3).max(120),
- email:z.email().transform(s=>s.toLowerCase()),departmentId:z.string().min(1),
+ email:z.union([z.email(),z.literal(''),z.null()]).optional().transform(s=>s?s.toLowerCase():null),departmentId:z.string().min(1),
  nickname:z.string().max(80).optional(),title:z.string().max(80).optional(),region:z.string().max(80).optional(),
  commute:z.enum(['NEAR','MEDIUM','FAR']).nullable().optional(),
  status:z.enum(['ACTIVE','INACTIVE','LEAVE']).default('ACTIVE'),

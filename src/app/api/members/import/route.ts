@@ -20,7 +20,7 @@ export async function POST(req:NextRequest){try{const u=await requireRole(STAFF)
   const [identifier,fullName,email,department]=records[i];const depId=ids.get(str(department).toLowerCase());
   const parsed=memberSchema.safeParse({identifier,fullName,email,departmentId:depId});
   if(!parsed.success){invalid.push({line:i+2,reason:'Campos inválidos ou diretoria não cadastrada'});continue;}
-  try{const found=await prisma.member.findFirst({where:{OR:[{identifier:parsed.data.identifier},{email:parsed.data.email}]},select:{id:true}});if(found){duplicates.push({line:i+2,identifier:parsed.data.identifier});continue;}
+  try{const found=await prisma.member.findFirst({where:{OR:[{identifier:parsed.data.identifier},...(parsed.data.email?[{email:parsed.data.email}]:[])]},select:{id:true}});if(found){duplicates.push({line:i+2,identifier:parsed.data.identifier});continue;}
    const m=await prisma.member.create({data:{identifier:parsed.data.identifier,fullName:parsed.data.fullName,email:parsed.data.email,departmentId:parsed.data.departmentId,preference:{create:{preferredPeriod:'ANY'}}}});createdIds.push(m.id);
   }catch{duplicates.push({line:i+2,identifier:parsed.data.identifier});}
  }

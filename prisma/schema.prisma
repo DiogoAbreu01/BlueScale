@@ -76,7 +76,7 @@ model Member {
   identifier  String @unique
   fullName    String
   nickname    String?
-  email       String @unique
+  email       String? @unique
   phone       String?
   status      MemberStatus @default(ACTIVE)
   departmentId String
