@@ -55,7 +55,7 @@ test('GP seleciona coordenadores da equipe mesmo sem ser ADMIN, e nome persiste'
  await expect(page.getByText('Designação salva — login não configurado')).toBeVisible();
 
  await page.reload();
- await expect(page.getByText('Coordenador de Festa '+token,{exact:true})).toBeVisible();
+ await expect(page.locator('section[aria-labelledby="coordinators-title"]').getByText('Coordenador de Festa '+token,{exact:true})).toBeVisible();
  const assignments=await (await page.request.get('/api/events/'+id+'/coordinators')).json();
  expect(assignments.members.some((m:{memberId:string})=>m.memberId===memberId)).toBe(true);
  await page.getByRole('button',{name:'Retirar Coordenador de Festa '+token+' dos coordenadores'}).click();
