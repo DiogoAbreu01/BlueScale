@@ -6,6 +6,7 @@ test('permite cadastrar e editar membros sem e-mail', async ({ page }) => {
   await page.getByLabel('E-mail ou usuário').fill(process.env.ADMIN_EMAIL!);
   await page.getByLabel('Senha').fill(process.env.ADMIN_PASSWORD!);
   await page.getByRole('button', { name: 'Entrar no BlueScale' }).click();
+  await expect(page.getByText('Uma escala mais justa.')).toBeVisible();
 
   await page.goto('/membros');
   await page.getByRole('button', { name: 'Novo membro' }).click();
