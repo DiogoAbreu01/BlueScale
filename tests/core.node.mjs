@@ -20,3 +20,30 @@ test('cap de turnos independente de horas',()=>{const m=member('a'),s1=slot('s1'
 test('verificador rejeita edição manual conflitante',()=>{const ss=[slot('s1'),slot('s2')],ms=[member('a')];const errors=validateSchedule(ms,ss,rules,[{memberId:'a',shiftId:'s1'},{memberId:'a',shiftId:'s2'}]);assert.ok(errors.some(e=>e.includes('Sobreposição')))});
 test('verificador detecta excesso de capacidade ideal',()=>{const ms=[member('a'),member('b')],ss=[slot('s')],errors=validateSchedule(ms,ss,rules,[{memberId:'a',shiftId:'s'},{memberId:'b',shiftId:'s'}]);assert.ok(errors.some(e=>e.includes('capacidade ideal')))});
 test('CSV suporta aspas com separador',async()=>{const {parseCsv}=await import('../src/lib/csv.ts');assert.equal(parseCsv('id;nome;email\n1;"Duarte; Ana";a@example.com')[1][1],'Duarte; Ana')});
+
+test('retrySerializable: reexecutes only fully rolled-back P2034 transactions',async()=>{
+ const {retrySerializable}=await import('../src/lib/retry-serializable.ts');
+ const conflict=Object.assign(new Error('serialization conflict'),{code:'P2034'});
+ let calls=0;
+ const result=await retrySerializable(async()=>{
+  calls++;
+  if(calls<=2)throw conflict;
+  return {ok:true};
+ },2);
+ assert.deepEqual(result,{ok:true});
+ assert.equal(calls,3);
+});
+test('retrySerializable: does not retry a stale optimistic revision',async()=>{
+ const {retrySerializable}=await import('../src/lib/retry-serializable.ts');
+ const stale=Object.assign(new Error('stale revision'),{status:409});
+ let calls=0;
+ await assert.rejects(()=>retrySerializable(async()=>{calls++;throw stale}),error=>error===stale);
+ assert.equal(calls,1);
+});
+test('retrySerializable: stops after its bounded retry budget',async()=>{
+ const {retrySerializable}=await import('../src/lib/retry-serializable.ts');
+ const conflict=Object.assign(new Error('serialization conflict'),{code:'P2034'});
+ let calls=0;
+ await assert.rejects(()=>retrySerializable(async()=>{calls++;throw conflict},1),error=>error===conflict);
+ assert.equal(calls,2);
+});
