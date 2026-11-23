@@ -1,5 +1,7 @@
 # BlueScale DAs — sistema colaborativo para escalas universitárias
 
+**International engineering portfolio:** [Read the English engineering case study](docs/ENGINEERING_CASE_STUDY_EN.md) — architecture, PostgreSQL concurrency, scoped authorization, verified Playwright E2E, performance and limitations.
+
 **Engineering benchmark:** [Reproducible scheduler measurements (English methodology)](docs/BENCHMARK-SCHEDULER.md) — synthetic 20/60/100-member scenarios with a runnable Node.js script; not a production SLA.
 
 **Versão:** `1.0.0-rc.1` · **Status:** build e testes integrados em PostgreSQL passaram no GitHub Actions; publicação do backend e testes em produção ainda pendentes.
