@@ -1,5 +1,7 @@
 # BlueScale DAs — sistema colaborativo para escalas universitárias
 
+**Engineering benchmark:** [Reproducible scheduler measurements (English methodology)](docs/BENCHMARK-SCHEDULER.md) — synthetic 20/60/100-member scenarios with a runnable Node.js script; not a production SLA.
+
 **Versão:** `1.0.0-rc.1` · **Status:** build e testes integrados em PostgreSQL passaram no GitHub Actions; publicação do backend e testes em produção ainda pendentes.
 
 O BlueScale é um aplicativo **mobile-first** que centraliza membros, eventos, turnos e escalas em PostgreSQL. Usuários em **celulares diferentes** acessam o mesmo servidor HTTPS com login individual. O projeto foi desenhado para a Gestão de Pessoas operar sem conhecimentos técnicos. Identidade azul elétrico/preto com logo exclusiva e assinatura **DAs**.
