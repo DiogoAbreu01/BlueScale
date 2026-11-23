@@ -1,12 +1,27 @@
-# BlueScale DAs — sistema colaborativo para escalas universitárias
+<p align="center"><img src="public/bluescale-das-logo.png" alt="BlueScale DAs logo" width="132" /></p>
 
-**International engineering portfolio:** [Read the English engineering case study](docs/ENGINEERING_CASE_STUDY_EN.md) — architecture, PostgreSQL concurrency, scoped authorization, verified Playwright E2E, performance and limitations.
+<h1 align="center">BlueScale</h1>
 
-**Engineering benchmark:** [Reproducible scheduler measurements (English methodology)](docs/BENCHMARK-SCHEDULER.md) — synthetic 20/60/100-member scenarios with a runnable Node.js script; not a production SLA.
+**The people are real. The constraints are non-negotiable.**
 
-**Versão:** `1.0.0-rc.1` · **Status:** build e testes integrados em PostgreSQL passaram no GitHub Actions; publicação do backend e testes em produção ainda pendentes.
+*Collaborative scheduling, built for university events.*
 
-O BlueScale é um aplicativo **mobile-first** que centraliza membros, eventos, turnos e escalas em PostgreSQL. Usuários em **celulares diferentes** acessam o mesmo servidor HTTPS com login individual. O projeto foi desenhado para a Gestão de Pessoas operar sem conhecimentos técnicos. Identidade azul elétrico/preto com logo exclusiva e assinatura **DAs**.
+[Engineering case study](docs/ENGINEERING_CASE_STUDY_EN.md) · [Measured benchmark](docs/BENCHMARK-SCHEDULER.md) · [Live CI](.github/workflows/ci.yml) · [Run it](#começar)
+
+[![CI](https://github.com/DiogoAbreu01/BlueScale/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DiogoAbreu01/BlueScale/actions/workflows/ci.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-151a29?style=flat-square&logo=typescript&logoColor=48b6ff)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-151a29?style=flat-square&logo=postgresql&logoColor=48b6ff)
+
+
+> **DAs / Engineering notes:** Solve the hard constraints first. Let the optimization improve a *valid* answer, never redefine what valid means.
+
+**Why it matters.** Coordinators need to assign real people to real shifts without double-bookings, unauthorized edits or accidental overwrites. BlueScale uses a shared Next.js / PostgreSQL backend, versioned drafts, role-based access and an optional SciPy MILP solver with independent constraint checks.
+
+**What you can verify:** [two-editor conflict tests](tests/e2e/schedule-optimistic-concurrency.spec.ts), [event access and revocation E2E](tests/e2e/coordinator-event-isolation.spec.ts), and a [reproducible synthetic TypeScript benchmark](docs/BENCHMARK-SCHEDULER.md). These are *controlled test results*, not a claim of production certification or solver optimality.
+
+**Current stage:** `1.0.0-rc.1`, engineering candidate. Integrated tests run in GitHub Actions; the hosted preview must be checked separately against the commit being reviewed. No production credentials or member data are included in this showcase.
+
+---
 
 ## Começar
 
