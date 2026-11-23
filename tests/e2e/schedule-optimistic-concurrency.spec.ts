@@ -104,7 +104,7 @@ test('two editors: stale revisions return 409 and simultaneous edits never overw
       versionId: versionA.id, revision: afterStale.revision,
       operation: 'unlock', memberId, shiftId,
     } });
-    expect(unlock.status()).toBe(200);
+    expect(unlock.status(), 'Unlock response: ' + await unlock.text()).toBe(200);
     const unlockedRevision = (await unlock.json()).revision as number;
     const [racedLock, racedUnassign] = await Promise.all([
       ctxA.request.post(editUrl, { data: {
