@@ -4,8 +4,12 @@ import { prisma } from '@/lib/db';
 import { STAFF, fail, ok, requireRole, HttpError, sameOrigin } from '@/lib/api';
 import { solveSchedule } from '@/lib/scheduler/optimize';
 import { loadInputs } from '@/lib/scheduler/load';
+import { retrySerializable } from '@/lib/retry-serializable';
 export async function POST(req:NextRequest,context:{params:Promise<{id:string}>}){try{const u=await requireRole(STAFF);sameOrigin(req);const {id}=await context.params;
- const result=await prisma.$transaction(async tx=>{
+ // The pure local scheduler has no external side effects, so a P2034 abort can be retried.
+ // If a remote solver is configured, do not retry the HTTP operation implicitly.
+ const maxRetries=process.env.SOLVER_SERVICE_URL&&process.env.SOLVER_SERVICE_TOKEN ? 0 : 3;
+ const result=await retrySerializable(()=>prisma.$transaction(async tx=>{
   const {event,members,slots,rules}=await loadInputs(tx,id);
   if(!slots.length)throw new HttpError(400,'Cadastre ao menos um posto primeiro.');
   if(['COMPLETED','CANCELLED'].includes(event.status))throw new HttpError(409,'Evento não aceita escalas.');
@@ -21,5 +25,5 @@ export async function POST(req:NextRequest,context:{params:Promise<{id:string}>}
   await tx.event.update({where:{id},data:{status:hasPublished?'PUBLISHED':'GENERATED'}});
   await tx.auditLog.create({data:{actorId:u.id,action:'GENERATE',entity:'ScheduleVersion',entityId:version.id,details:{uncovered:result.uncovered.length}}});
   return {versionId:version.id,revision:version.revision+(existing?1:0),...result};
- },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable,timeout:20000});return ok(result);
+ },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable,timeout:20000}),maxRetries);return ok(result);
  }catch(e){return fail(e)}}
