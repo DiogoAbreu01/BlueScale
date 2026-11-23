@@ -1,8 +1,6 @@
-<div align="center">
+<p align="center"><img src="public/bluescale-das-logo.png" alt="BlueScale DAs logo" width="132" /></p>
 
-<img src="public/bluescale-das-logo.png" alt="BlueScale DAs logo" width="132" />
-
-# BlueScale
+<h1 align="center">BlueScale</h1>
 
 **The people are real. The constraints are non-negotiable.**
 
@@ -14,7 +12,6 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-151a29?style=flat-square&logo=typescript&logoColor=48b6ff)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-151a29?style=flat-square&logo=postgresql&logoColor=48b6ff)
 
-</div>
 
 > **DAs / Engineering notes:** Solve the hard constraints first. Let the optimization improve a *valid* answer, never redefine what valid means.
 
