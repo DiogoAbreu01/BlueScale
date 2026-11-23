@@ -1,4 +1,4 @@
-<p align="center"><img src="public/bluescale-das-logo.png" alt="BlueScale DAs logo" width="132" /></p>
+<p align="center"><img src="assets/das-animated-icon.svg" alt="BlueScale animated project emblem" width="122" /></p>
 
 <h1 align="center">BlueScale</h1>
 
